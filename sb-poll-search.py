@@ -66,8 +66,8 @@ class SB:
         sleep(5)
         driver.execute_script(f"document.querySelectorAll('td.pollCheckbox')[{random.randint(0,1)}].click();")
         sleep(3)
-        #driver.execute_script("document.getElementById('btnVote').click()")
-        driver.find_element(By.ID,'btnVote').click()
+        driver.execute_script("document.getElementById('btnVote').click()")
+        #driver.find_element(By.ID,'btnVote').click()
         sleep(5)
 
     def search(self):
@@ -82,12 +82,11 @@ class SB:
         print('Begin first search win')
         for url in links:
             driver.get(url)
-            # claims sb for the first search win (captcha?)
-            if url == links[3]:
-                sleep(10)
-                driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
             sleep(16)
+        # claims sb for the first search win (captcha?)
+        driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
         print('End first search win')
+        sleep(5)
         
         # second search win
         print('Begin second search win')
@@ -96,11 +95,11 @@ class SB:
             sleep(16)
         
         driver.get(random.choice(links))
-        sleep(10)
+        sleep(16)
         # claims sb for the second search win (captcha?)
         driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
         print('End second search win')
-        sleep(30)
+        sleep(5)
 
     def tearDown(self):
         """Stops your Chrome session."""
