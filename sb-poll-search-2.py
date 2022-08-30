@@ -35,14 +35,14 @@ def main():
     webbrowser.open('https://www.swagbucks.com/polls')
     time.sleep(10)
 
-    print('first')
+    print('Begin first search win')
 
     # first search win
     for url in links:
         webbrowser.open(url)
         time.sleep(16)
 
-    print('second')
+    print('Begin second search win')
 
     # second search win
     #for _ in range(8):

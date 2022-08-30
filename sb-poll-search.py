@@ -24,8 +24,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
-from time import sleep
-import random, pickle, config
+from time import sleep, time
+import random, pickle, config, math
 
 
 class SB:
@@ -39,6 +39,7 @@ class SB:
             password (str): Your login password in config.py for your Swagbucks account.
         """
         self.driver = driver
+        driver.maximize_window()
         try: # load cookies into Swagbucks if cookies.pkl is detected
             driver.get('https://www.swagbucks.com/') 
             cookies = pickle.load(open('cookies.pkl', 'rb'))
@@ -62,17 +63,20 @@ class SB:
     def poll(self):
         """Randomly selects a poll answer and submits your answer to earn 1 SB."""
         driver = self.driver
+        driver.maximize_window()
         driver.get('https://www.swagbucks.com/polls') 
         sleep(5)
         driver.execute_script(f"document.querySelectorAll('td.pollCheckbox')[{random.randint(0,1)}].click();")
         sleep(3)
         driver.execute_script("document.getElementById('btnVote').click()")
+        print('Submitted answer')
         #driver.find_element(By.ID,'btnVote').click()
         sleep(5)
 
     def search(self):
         """Automates your searches and claims your search wins."""
         driver = self.driver
+        driver.maximize_window()
         links = ['https://www.swagbucks.com/g/l/xcq6yq',
         'https://www.swagbucks.com/g/l/6vyye1',
         'https://www.swagbucks.com/g/l/p3btd7',
@@ -83,31 +87,44 @@ class SB:
         for url in links:
             driver.get(url)
             sleep(16)
-        # claims sb for the first search win (captcha?)
-        driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
-        print('End first search win')
-        sleep(5)
-        
+            # claims sb for the first search win (captcha?)
+            self.claimSB()
+
         # second search win
         print('Begin second search win')
         for url in (x for _ in range(8) for x in links):
             driver.get(url)
             sleep(16)
+            # claims sb for the second search win (captcha?)
+            self.claimSB()
         
         driver.get(random.choice(links))
         sleep(16)
         # claims sb for the second search win (captcha?)
-        driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
-        print('End second search win')
-        sleep(5)
+        self.claimSB()
 
     def tearDown(self):
         """Stops your Chrome session."""
         self.driver.quit()
 
+    def claimSB(self):
+        """Submits form to claim SB."""
+        driver = self.driver
+        try:
+            driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
+            sleep(5)
+            print('Claimed SB')
+            driver.refresh()
+            sleep(5)
+            print('End search win')
+        except:
+            pass
+
 
 if __name__ == '__main__':
+    start = time()
     swag = SB(config.EMAIL, config.PASSWORD)
     swag.poll()
     swag.search()
     swag.tearDown()
+    print(f'Bot ran for: {math.floor(int(time() - start) / 60)} minutes and {int(time() - start) % 60} seconds.')
