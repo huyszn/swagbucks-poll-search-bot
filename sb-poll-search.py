@@ -112,10 +112,10 @@ class SB:
         driver = self.driver
         try:
             driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
-            sleep(5)
+            sleep(10)
             print('Claimed SB')
             driver.refresh()
-            sleep(5)
+            sleep(10)
             print('End search win')
         except:
             pass
