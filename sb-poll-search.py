@@ -8,6 +8,7 @@ from time import sleep, time
 import random, pickle, config, math
 
 TAB_NUM = 1 # tab number when a new search is opened
+SEARCH_WINS = 0 # number of search wins achieved
 
 class SB:
     """The SB object logs into Swagbucks and helps you automate poll answers and search wins."""
@@ -75,6 +76,7 @@ class SB:
 
     def search(self):
         """Automates your searches and claims your search wins."""
+        global SEARCH_WINS
         driver = self.driver
         driver.maximize_window()
         links = ['https://www.swagbucks.com/g/l/xcq6yq',
@@ -82,27 +84,17 @@ class SB:
         'https://www.swagbucks.com/g/l/p3btd7',
         'https://www.swagbucks.com/g/l/1j26i4']
 
-        # first search win
-        print('Begin first search win')
-        for url in links:
-            self.open_link_new_tab(url)
-            sleep(16)
-            # claims sb for the first search win (captcha?)
-            self.claimSB()
-
-        # second search win
-        print('Begin second search win')
-        for url in (x for _ in range(8) for x in links):
-            self.open_link_new_tab(url)
-            sleep(16)
-            # claims sb for the second search win (captcha?)
-            self.claimSB()
-        
-        self.open_link_new_tab(random.choice(links))
-        print('Finished last search')
-        sleep(16)
-        # claims sb for the second search win (captcha?)
-        self.claimSB()
+        # two search wins
+        print(f'Begin search win #{SEARCH_WINS+1}')
+        for url in (x for _ in range(10) for x in links):
+            # end search if bot achieved two search wins
+            if SEARCH_WINS == 2:
+                break
+            else:
+                self.open_link_new_tab(url)
+                sleep(16)
+                # claims sb for search win (captcha?)
+                self.claimSB()
 
     def tearDown(self):
         """Stops your Chrome session."""
@@ -111,6 +103,7 @@ class SB:
 
     def claimSB(self):
         """Submits form to claim SB."""
+        global SEARCH_WINS
         driver = self.driver
         try:
             driver.execute_script("document.getElementById('claimSearchWinForm').submit()")
@@ -118,7 +111,10 @@ class SB:
             print('Claimed SB')
             #driver.refresh()
             sleep(10)
-            print('End search win')
+            print(f'End search win #{SEARCH_WINS+1}')
+            SEARCH_WINS += 1
+            if SEARCH_WINS != 2:
+                print(f'Begin search win #{SEARCH_WINS+1}')
         except JavascriptException:
             pass
 

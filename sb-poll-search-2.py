@@ -16,7 +16,7 @@ def main():
     print('Begin first search win')
 
     # first search win
-    for url in links:
+    for url in (x for _ in range(1) for x in links):
         webbrowser.open(url)
         time.sleep(16)
 
