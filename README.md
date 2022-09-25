@@ -10,34 +10,37 @@ A bot to help you complete your daily Swagbucks poll for 1 SB and your two daily
 
 ### Requirements
 
-```
-$ pip install -r requirements.txt
+Clone this repository, cd into it, and install dependencies:
+```sh
+git clone https://github.com/huyszn/swagbucks-poll-search-bot.git
+cd swagbucks-poll-search-bot
+pip install -r requirements.txt
 ```
 
 ### config.py
 
+Copy the contents of `config-example.py` into a new file `config.py`.
+```sh
+touch config.py
+cp config-example.py config.py
 ```
-$ touch config.py
-```
-Copy the contents of `config-example.py` into `config.py`. <br/>
+
+Replace the `EMAIL` and `PASSWORD` fields with your account email and password in `config.py`.
 
 ```
 EMAIL = "your email"
 PASSWORD = "your password"
 ```
 
-Replace the `EMAIL` and `PASSWORD` fields with your account email and password.
-
-
 ## Run the bot
 
-more automated
-```
+Opens poll and search links in a Chrome browser via Selenium. It automates answering the poll and claiming search wins.
+```sh
 $ python3 sb-poll-search.py
 ```
 
-or more manual
-```
+Opens poll and search links in your default browser. You can manually enter your poll answer and claim search wins.
+```sh
 $ python3 sb-poll-search-2.py
 ```
 
